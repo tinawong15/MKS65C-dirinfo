@@ -13,7 +13,6 @@ int main() {
   // printf("%s\n", size);
   // printf("Time of last access: %s", ctime(&(s->st_atime)));
 
-  // free(s);
   DIR *d = opendir(".");
   printf("Statistics for directory: . \n");
   int size;
@@ -24,7 +23,24 @@ int main() {
     size += s->st_size;
   }
   closedir(d);
-  printf("Total Directory Size:%d\n", size);
+  int i = 0;
+  while(size > 1000) {
+    size = size / 1000;
+    i++;
+  }
+  if(i == 0) {
+    printf("Total Directory Size: %d B\n", size);
+  }
+  else if(i == 1) {
+    printf("Total Directory Size: %d KB\n", size);
+  }
+  else if(i == 2) {
+    printf("Total Directory Size: %d MB\n", size);
+  }
+  else{
+    printf("Total Directory Size: %d GB\n", size);
+  }
+  free(s);
   d = opendir(".");
   printf("Directories:\n");
   while( (entry = readdir(d)) != NULL ) {
