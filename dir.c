@@ -60,6 +60,6 @@ char * string_perms(struct stat *s) {
     strcat(permissions, perms0);
     free(perms0);
     free(perms1);
+    return permissions;
   }
-  return permissions;
 }

@@ -51,10 +51,13 @@ int main() {
   closedir(d);
   d = opendir(".");
   printf("Regular files:\n");
+  s = malloc(sizeof(struct stat));
   while( (entry = readdir(d)) != NULL ) {
-      if(entry->d_type == 8) {
-        printf("%s\n", entry->d_name);
-      }
+    if(entry->d_type == 8) {
+      stat(entry->d_name, s);
+      printf("%s : %s\n", string_perms(s), entry->d_name);
+    }
   }
+  free(s);
   return 0;
 }

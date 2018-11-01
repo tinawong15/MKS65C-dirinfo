@@ -7,3 +7,7 @@
 #include <string.h>
 #include <dirent.h>
 #include<sys/types.h>
+
+char * perm_octal(int octal);
+
+char * string_perms(struct stat *s);
