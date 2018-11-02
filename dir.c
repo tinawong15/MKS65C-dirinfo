@@ -44,7 +44,7 @@ char * string_perms(struct stat *s) {
 
   for(times = 0; times < 3; times++){
     digit = perms % 010;
-    // printf("digit: %o\n", digit);
+    //printf("digit: %o\n", digit);
     if (times == 0){
       strcat(perms0, perm_octal(digit));
     }
@@ -55,11 +55,11 @@ char * string_perms(struct stat *s) {
     strcat(permissions, perm_octal(digit));
     }
     perms = (perms - (perms % 010)) / 010; //cut off last digit cuz it's whack
-    //cat the two arrays into permissions
-    strcat(permissions, perms1);
-    strcat(permissions, perms0);
-    free(perms0);
-    free(perms1);
-    return permissions;
   }
+  //cat the two arrays into permissions
+  strcat(permissions, perms1);
+  strcat(permissions, perms0);
+  free(perms0);
+  free(perms1);
+  return permissions;
 }
