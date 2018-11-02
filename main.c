@@ -40,10 +40,12 @@ int main() {
   d = opendir(".");
   printf("Regular files:\n");
   s = malloc(sizeof(struct stat));
+  char entry_time [256];
   while( (entry = readdir(d)) != NULL ) {
     if(entry->d_type == 8) {
       stat(entry->d_name, s);
-      printf("%s : %s\n", string_perms(s), entry->d_name);
+      strcpy(entry_time, ctime(&(s->st_atime)));
+      printf("%s %s %s\n", string_perms(s), entry_time, entry->d_name);
     }
   }
   free(s);

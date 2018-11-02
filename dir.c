@@ -80,5 +80,25 @@ int get_size(DIR *d, int size){
     stat(entry->d_name, s);
     size_total += s->st_size;
   }
+  free(s);
   return size_total;
+}
+
+char * ls(DIR *d){
+  struct stat *s = malloc(sizeof(struct stat));
+  struct dirent *entry;
+  int length = 0;
+
+  // find za length
+  while( (entry = readdir(d)) != NULL ) {
+    length++;
+  }
+  char * listing[length];
+
+  while( (entry = readdir(d)) != NULL ) {
+    if(entry->d_type == 4) {
+    }
+  }
+
+  free(s);
 }

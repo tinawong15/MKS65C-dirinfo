@@ -6,7 +6,10 @@
 #include <time.h>
 #include <string.h>
 #include <dirent.h>
-#include<sys/types.h>
+#include <sys/types.h>
+#include <errno.h>
+
+// struct dir {char *dir_name; struct dirent *entry;};
 
 char * perm_octal(int octal);
 
