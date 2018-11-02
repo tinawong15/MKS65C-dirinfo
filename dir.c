@@ -63,3 +63,22 @@ char * string_perms(struct stat *s) {
   free(perms1);
   return permissions;
 }
+
+// recursively find size down to a certain depth
+// assumes d has been opened, DOES NOT CLOSE d
+int get_size(DIR *d, int size){
+  struct stat *s = malloc(sizeof(struct stat));
+  struct dirent *entry;
+  int size_total = 0;
+
+  while( (entry = readdir(d)) != NULL ) {
+    // if you're a directory
+    if(entry->d_type == 8 && size > 1) {
+      size_total += get_size(d, size - 1);
+    }
+    // add BOTH dir size and file size
+    stat(entry->d_name, s);
+    size_total += s->st_size;
+  }
+  return size_total;
+}

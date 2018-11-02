@@ -2,14 +2,14 @@
 
 int main() {
   DIR *d = opendir(".");
-  printf("Statistics for directory: . \n");
-  int size;
+  printf("Statistics for directory: \n");
+  int size, second_size;
   struct dirent *entry;
   struct stat *s = malloc(sizeof(struct stat));
-  while( (entry = readdir(d)) != NULL ) {
-    stat(entry->d_name, s);
-    size += s->st_size;
-  }
+
+  // get_size(DIR *ptr, recursion depth)
+  size = get_size(d, 1);
+
   closedir(d);
   int i = 0;
   while(size > 1000) {

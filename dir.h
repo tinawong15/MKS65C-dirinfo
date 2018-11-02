@@ -11,3 +11,5 @@
 char * perm_octal(int octal);
 
 char * string_perms(struct stat *s);
+
+int get_size(DIR *d, int size);
