@@ -54,7 +54,7 @@ char * string_perms(struct stat *s) {
     else{
     strcat(permissions, perm_octal(digit));
     }
-    perms = (perms - (perms % 010)) / 010; //cut off last digit cuz it's whack
+    perms = perms / 010; //cut off last digit cuz it's whack
   }
   //cat the two arrays into permissions
   strcat(permissions, perms1);
