@@ -41,10 +41,13 @@ int main() {
   printf("Regular files:\n");
   s = malloc(sizeof(struct stat));
   char entry_time [256];
+  int len = 0;
   while( (entry = readdir(d)) != NULL ) {
     if(entry->d_type == 8) {
       stat(entry->d_name, s);
       strcpy(entry_time, ctime(&(s->st_atime)));
+      len = strlen(entry_time);
+      entry_time[len-1] = 0; // strip newline
       printf("%s %s %s\n", string_perms(s), entry_time, entry->d_name);
     }
   }
