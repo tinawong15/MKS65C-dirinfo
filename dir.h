@@ -9,10 +9,12 @@
 #include <sys/types.h>
 #include <errno.h>
 
-// struct dir {char *dir_name; struct dirent *entry;};
+struct info {char *name; char * entry_string;};
 
 char * perm_octal(int octal);
 
 char * string_perms(struct stat *s);
 
 int get_size(DIR *d, int size);
+
+void ls(DIR *d);

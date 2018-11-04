@@ -84,21 +84,126 @@ int get_size(DIR *d, int size){
   return size_total;
 }
 
-// char * ls(DIR *d){
-//   struct stat *s = malloc(sizeof(struct stat));
-//   struct dirent *entry;
-//   int length = 0;
-//
-//   // find za length
-//   while( (entry = readdir(d)) != NULL ) {
-//     length++;
-//   }
-//   char * listing[length];
-//
-//   while( (entry = readdir(d)) != NULL ) {
-//     if(entry->d_type == 4) {
-//     }
-//   }
-//
-//   free(s);
-// }
+// helper to do the alphabetical insertion
+struct info ** alphabetical_insert(struct info ** listing, struct info * info, int dir_index, int mode, int length){
+  int index;
+  int second_index;
+  struct info * placeholder; //holds the info
+  struct info * second_placeholder;
+  //printf("%s\n", placeholder -> name);
+  // dir case
+  if (mode == 0){
+    for (index = 0; index < dir_index; index++){
+      // take care of first and last case
+      if (listing[index] == NULL){
+        listing[index] = info;
+        break;
+      }
+      // general case, and then increment everything else by 1
+      if (strcmp(info -> name, listing[index] -> name) > 0 ){
+        index = second_index + 1; //one swap has already been done
+        placeholder = listing[index];
+        listing[index] = info;
+        //printf("Listing[%d]: %s\n", index, listing[index] -> name);
+        // don't want stuff spilling into files
+        while (second_index < dir_index - 1 && listing[second_index] != NULL){
+          printf("Listing[%d]: %s\n", second_index, second_placeholder -> name);
+          second_placeholder = placeholder;
+          placeholder = listing[second_index];
+          listing[second_index] = second_placeholder;
+          second_index++;
+        }
+        break;
+      }
+    }
+  }
+  // file case
+  else {
+    for (index = dir_index; index < length; index++){
+      // take care of first and last case
+      if (listing[index] == NULL){
+        listing[index] = info;
+        break;
+      }
+      // general case, and then increment everything else by 1
+      if (strcmp(info -> name, listing[index] -> name) > 0 ){
+        index = second_index + 1; //one swap has already been done
+        placeholder = listing[index];
+        listing[index] = info;
+        // don't want stuff spilling into files
+        while (second_index < length - 1 && listing[second_index] != NULL){
+          second_placeholder = placeholder;
+          placeholder = listing[second_index];
+          listing[second_index] = second_placeholder;
+          second_index++;
+        }
+      }
+
+    }
+  }
+  return listing;
+}
+
+// do ls -l
+void ls(DIR *d){
+  struct stat *s = malloc(sizeof(struct stat));
+  struct dirent *entry;
+  int length = 0;
+  int file_count = 0;
+  int dir_count = 0;
+
+  // find za length
+  while( (entry = readdir(d)) != NULL ) {
+
+    // keep track of the directory count
+    if (entry -> d_type == 8){
+      dir_count++;
+    }
+    length++;
+  }
+
+  closedir(d);
+  d = opendir(".");
+
+  struct info ** listing = calloc(length, sizeof(listing));
+  char entry_time[256];
+  char entry_string[256]; // string containing time, perms, and name of file
+  int len; //track string length to snip off the \n
+  struct info *info;
+
+  while( (entry = readdir(d)) != NULL ) {
+    stat(entry->d_name, s);
+    strcpy(entry_time, ctime(&(s->st_atime)));
+    len = strlen(entry_time);
+    entry_time[len-1] = 0; // strip newline
+
+    // add all the info into one string
+    // spaces needed?
+    strcpy(entry_string, string_perms(s));
+    strcat(entry_string, entry_time);
+    strcat(entry_string, entry -> d_name);
+
+
+    info = malloc(sizeof(info));
+    info -> name = entry -> d_name;
+    info -> entry_string = entry_string;
+
+    // add in the new string alphabetically
+    if(entry->d_type == 4){
+      alphabetical_insert(listing, info, dir_count, 1, length);
+    }
+    else if (entry -> d_type == 8){
+      alphabetical_insert(listing, info, dir_count, 0, length);
+    }
+  }
+
+  // print out the ls
+  int index;
+  for (index = 0; index < length; index++){
+    printf("%s\n", listing[index] -> entry_string);
+  }
+
+  free(s);
+  free(listing);
+  // need to free info?
+}
