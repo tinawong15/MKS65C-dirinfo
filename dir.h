@@ -18,3 +18,5 @@ char * string_perms(struct stat *s);
 int get_size(DIR *d, int size);
 
 void ls(DIR *d);
+
+void dir(char *path);

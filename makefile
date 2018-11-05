@@ -3,12 +3,12 @@ all: dir.o main.o
 
 main.o: main.c
 	gcc -c main.c
-	
+
 dir.o: dir.c dir.h
 	gcc -c dir.c
 
 run:
-	./a.out
+	./a.out $(args)
 
 clean:
 	rm -rf *.o a.out
